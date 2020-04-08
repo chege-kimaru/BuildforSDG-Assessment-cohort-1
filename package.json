@@ -6,7 +6,7 @@
   "private": false,
   "scripts": {
     "lint": "eslint ./src/",
-    "build": "rm -rf ./build && babel -d ./build ./src -s",
+    "build": "rm -rf ./build && babel -d ./build ./src -s --copy-files",
     "start": "node ./build/api.js",
     "dev": "nodemon --exec babel-node ./src/api.js"
   },
