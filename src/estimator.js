@@ -29,7 +29,7 @@ const normalizeTime = (data) => {
     case 'weeks':
       return data.timeToElapse * 7;
     case 'months':
-      return data.timeToElapse * 28;
+      return data.timeToElapse * 30;
     default:
       throw new Error('Unrecognized period type');
   }
