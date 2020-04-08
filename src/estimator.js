@@ -53,7 +53,7 @@ const hospitalBedsByRequestedTime = (data, severe) => 0.35
 const casesForICUByRequestedTime = (data, severe) => 0.05
   * infectionsByRequestedTime(data, severe);
 
-const casesForVentilatorsByRequestedTime = (data, severe) => 0.2
+const casesForVentilatorsByRequestedTime = (data, severe) => 0.02
   * infectionsByRequestedTime(data, severe);
 
 const dollarsInFlight = (data, severe) => infectionsByRequestedTime(data, severe)
