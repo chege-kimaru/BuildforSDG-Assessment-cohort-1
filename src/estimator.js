@@ -60,26 +60,36 @@ const dollarsInFlight = (data, severe) => infectionsByRequestedTime(data, severe
   * data.region.avgDailyIncomePopulation * data.region.avgDailyIncomeInUSD * normalizeTime(data);
 
 
-const covid19ImpactEstimator = (data) => ({
-  data,
-  impact: {
-    currentlyInfected: currentlyInfected(data, 0),
-    infectionsByRequestedTime: infectionsByRequestedTime(data, 0),
-    severeCasesByRequestedTime: severeCasesByRequestedTime(data, 0),
-    hospitalBedsByRequestedTime: hospitalBedsByRequestedTime(data, 0),
-    casesForICUByRequestedTime: casesForICUByRequestedTime(data, 0),
-    casesForVentilatorsByRequestedTime: casesForVentilatorsByRequestedTime(data, 0),
-    dollarsInFlight: dollarsInFlight(data, 0)
-  },
-  severeImpact: {
-    currentlyInfected: currentlyInfected(data, 1),
-    infectionsByRequestedTime: infectionsByRequestedTime(data, 1),
-    severeCasesByRequestedTime: severeCasesByRequestedTime(data, 1),
-    hospitalBedsByRequestedTime: hospitalBedsByRequestedTime(data, 1),
-    casesForICUByRequestedTime: casesForICUByRequestedTime(data, 1),
-    casesForVentilatorsByRequestedTime: casesForVentilatorsByRequestedTime(data, 1),
-    dollarsInFlight: dollarsInFlight(data, 1)
+const covid19ImpactEstimator = (data) => {
+  if (!data.region) {
+    data.region = {
+      name: 'Africa',
+      avgAge: 19.7,
+      avgDailyIncomeInUSD: 5,
+      avgDailyIncomePopulation: 0.71
+    };
   }
-});
+  return {
+    data,
+    impact: {
+      currentlyInfected: currentlyInfected(data, 0),
+      infectionsByRequestedTime: infectionsByRequestedTime(data, 0),
+      severeCasesByRequestedTime: severeCasesByRequestedTime(data, 0),
+      hospitalBedsByRequestedTime: hospitalBedsByRequestedTime(data, 0),
+      casesForICUByRequestedTime: casesForICUByRequestedTime(data, 0),
+      casesForVentilatorsByRequestedTime: casesForVentilatorsByRequestedTime(data, 0),
+      dollarsInFlight: dollarsInFlight(data, 0)
+    },
+    severeImpact: {
+      currentlyInfected: currentlyInfected(data, 1),
+      infectionsByRequestedTime: infectionsByRequestedTime(data, 1),
+      severeCasesByRequestedTime: severeCasesByRequestedTime(data, 1),
+      hospitalBedsByRequestedTime: hospitalBedsByRequestedTime(data, 1),
+      casesForICUByRequestedTime: casesForICUByRequestedTime(data, 1),
+      casesForVentilatorsByRequestedTime: casesForVentilatorsByRequestedTime(data, 1),
+      dollarsInFlight: dollarsInFlight(data, 1)
+    }
+  };
+};
 
 export default covid19ImpactEstimator;

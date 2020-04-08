@@ -17,6 +17,10 @@
         .jumbotron {
             margin-top: 2rem;
         }
+
+        .results {
+            margin-top: 2rem;
+        }
     </style>
 </head>
 <body>
@@ -24,28 +28,32 @@
 <div class="container">
     <div class="jumbotron">
         <h1 class="text-center">COVID-19 ESTIMATOR</h1>
-        <form>
+        <form id="form">
             <div class="form-group">
                 <label for="population">Population</label>
-                <input data-population type="number" class="form-control" id="population">
+                <input name="population" data-population type="number" class="form-control"
+                       id="population">
             </div>
             <div class="form-group">
                 <label for="timeToElapse">Time to elapse</label>
-                <input data-time-to-elapse type="number" class="form-control" id="timeToElapse">
+                <input name="timeToElapse" data-time-to-elapse type="number" class="form-control"
+                       id="timeToElapse">
             </div>
             <div class="form-group">
                 <label for="reportedCases">Reported Cases</label>
-                <input data-total-hospital-beds type="number" class="form-control"
+                <input name="reportedCases" data-total-hospital-beds type="number"
+                       class="form-control"
                        id="reportedCases">
             </div>
             <div class="form-group">
                 <label for="totalHospitalBeds">Total Hospital Beds</label>
-                <input data-total-hospital-beds type="number" class="form-control"
+                <input name="totalHospitalBeds" data-total-hospital-beds type="number"
+                       class="form-control"
                        id="totalHospitalBeds">
             </div>
             <div class="form-group">
                 <label for="periodType">Period Type</label>
-                <select data-period-type class="form-control" id="periodType">
+                <select name="periodType" data-period-type class="form-control" id="periodType">
                     <option value="days">days</option>
                     <option value="days">weeks</option>
                     <option value="days">months</option>
@@ -53,6 +61,17 @@
             </div>
             <button data-go-estimate type="submit" class="btn btn-primary">Submit</button>
         </form>
+    </div>
+    <div class="text-center results">
+        <h2>Estimations</h2>
+        <h4>Impact</h4>
+        <div id="impact">
+
+        </div>
+        <h4>Severe Impact</h4>
+        <div id="severeImpact">
+
+        </div>
     </div>
 </div>
 
@@ -67,5 +86,61 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+  const resultTable = (data, severe) => {
+    return `
+            <table class="table">
+                <tr>
+                    <td>Currently Infected</td>
+                    <td>${severe ? data.severeImpact.currentlyInfected : data.impact.currentlyInfected}</td>
+                </tr>
+                <tr>
+                    <td>Infections</td>
+                    <td>${severe ? data.severeImpact.infectionsByRequestedTime : data.impact.infectionsByRequestedTime}</td>
+                </tr>
+                <tr>
+                    <td>Severe Cases</td>
+                    <td>${severe ? data.severeImpact.severeCasesByRequestedTime : data.impact.severeCasesByRequestedTime}</td>
+                </tr>
+                <tr>
+                    <td>Hospital Beds</td>
+                    <td>${severe ? data.severeImpact.hospitalBedsByRequestedTime : data.impact.hospitalBedsByRequestedTime}</td>
+                </tr>
+                <tr>
+                    <td>Cases for ICU</td>
+                    <td>${severe ? data.severeImpact.casesForICUByRequestedTime : data.impact.casesForICUByRequestedTime}</td>
+                </tr>
+                <tr>
+                    <td>Cases for Ventilators</td>
+                    <td>${severe ? data.severeImpact.casesForVentilatorsByRequestedTime : data.impact.casesForVentilatorsByRequestedTime}</td>
+                </tr>
+                <tr>
+                    <td>Dollars in Flight</td>
+                    <td>${severe ? data.severeImpact.dollarsInFlight : data.impact.dollarsInFlight}</td>
+                </tr>
+                </tr>
+            </table>
+      `;
+  };
+  const API = '/api/v1/on-covid-19';
+  axios.defaults.baseURL = API;
+
+  $('#form').submit(e => {
+    e.preventDefault();
+
+    // const data = new FormData($('#categoryForm')[0]);
+    const data = $('#form').serialize();
+    axios.post(`/`, data)
+      .then((response) => {
+        $('#impact').empty().append(resultTable(response.data, 0));
+        $('#severeImpact').empty().append(resultTable(response.data, 1));
+      })
+      .catch(function(error) {
+        alert(error);
+      });
+  });
+</script>
 </body>
 </html>
