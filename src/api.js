@@ -9,7 +9,7 @@ import xml from 'xml';
 import path from 'path';
 import estimator from './estimator';
 
-const mongooseUrl = 'mongodb+srv://kevin:FMSTraDZh3EYmLzN@build-for-sdg-assessment-2mbkv.mongodb.net?retryWrites=true&w=majority';
+const mongooseUrl = process.env.MONGODB_URL;
 const { MongoClient } = mongodb;
 let db;
 MongoClient.connect(mongooseUrl, (err, data) => {
