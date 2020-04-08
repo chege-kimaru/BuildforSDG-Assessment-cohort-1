@@ -41,17 +41,17 @@ const currentlyInfected = (data, severe) => (severe ? data.reportedCases * 50 : 
 const infectionsByRequestedTime = (data, severe) => currentlyInfected(data, severe)
   * 2 ** Math.round((normalizeTime(data) / 3));
 
-const severeCasesByRequestedTime = (data, severe) => Math.round(0.15
-  * infectionsByRequestedTime(data, severe));
+const severeCasesByRequestedTime = (data, severe) => 0.15
+  * infectionsByRequestedTime(data, severe);
 
-const hospitalBedsByRequestedTime = (data, severe) => Math.round(0.35
-  * data.totalHospitalBeds - severeCasesByRequestedTime(data, severe));
+const hospitalBedsByRequestedTime = (data, severe) => 0.35
+  * data.totalHospitalBeds - severeCasesByRequestedTime(data, severe);
 
-const casesForICUByRequestedTime = (data, severe) => Math.round(0.5
-  * infectionsByRequestedTime(data, severe));
+const casesForICUByRequestedTime = (data, severe) => 0.5
+  * infectionsByRequestedTime(data, severe);
 
-const casesForVentilatorsByRequestedTime = (data, severe) => Math.round(0.2
-  * infectionsByRequestedTime(data, severe));
+const casesForVentilatorsByRequestedTime = (data, severe) => 0.2
+  * infectionsByRequestedTime(data, severe);
 
 const dollarsInFlight = (data, severe) => infectionsByRequestedTime(data, severe)
   * data.region.avgDailyIncomePopulation * data.region.avgDailyIncomeInUSD * normalizeTime(data);
