@@ -41,7 +41,7 @@ const currentlyInfected = (data, severe) => (severe ? data.reportedCases * 50 : 
 
 // challenge 2
 const infectionsByRequestedTime = (data, severe) => currentlyInfected(data, severe)
-  * 2 ** Math.round((normalizeTime(data) / 3));
+  * 2 ** Math.trun((normalizeTime(data) / 3));
 
 const severeCasesByRequestedTime = (data, severe) => 0.15
   * infectionsByRequestedTime(data, severe);
