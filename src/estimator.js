@@ -50,7 +50,7 @@ const hospitalBedsByRequestedTime = (data, severe) => 0.35
   * data.totalHospitalBeds - severeCasesByRequestedTime(data, severe);
 
 // challenge 3
-const casesForICUByRequestedTime = (data, severe) => 0.5
+const casesForICUByRequestedTime = (data, severe) => 0.05
   * infectionsByRequestedTime(data, severe);
 
 const casesForVentilatorsByRequestedTime = (data, severe) => 0.2
