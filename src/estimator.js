@@ -31,7 +31,7 @@ const normalizeTime = (data) => {
     case 'months':
       return data.timeToElapse * 30;
     default:
-      throw new Error('Unrecognized period type');
+      throw new Error('Unrecognized period type. Supported are days, weeks and months.');
   }
 };
 
