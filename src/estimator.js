@@ -46,7 +46,7 @@ const infectionsByRequestedTime = (data, severe) => currentlyInfected(data, seve
 const severeCasesByRequestedTime = (data, severe) => 0.15
   * infectionsByRequestedTime(data, severe);
 
-const hospitalBedsByRequestedTime = (data, severe) => Math.round(0.35
+const hospitalBedsByRequestedTime = (data, severe) => Math.trunc(0.35
   * data.totalHospitalBeds - severeCasesByRequestedTime(data, severe));
 
 // challenge 3
