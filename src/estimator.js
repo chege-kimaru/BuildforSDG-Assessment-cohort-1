@@ -43,18 +43,18 @@ const infectionsByRequestedTime = (data, severe) => currentlyInfected(data, seve
   * 2 ** Math.trunc((normalizeTime(data) / 3));
 
 // challenge 2
-const severeCasesByRequestedTime = (data, severe) => 0.15
-  * infectionsByRequestedTime(data, severe);
+const severeCasesByRequestedTime = (data, severe) => Math.trunc(0.15
+  * infectionsByRequestedTime(data, severe));
 
 const hospitalBedsByRequestedTime = (data, severe) => Math.trunc(0.35
   * data.totalHospitalBeds - severeCasesByRequestedTime(data, severe));
 
 // challenge 3
-const casesForICUByRequestedTime = (data, severe) => 0.05
-  * infectionsByRequestedTime(data, severe);
+const casesForICUByRequestedTime = (data, severe) => Math.trunc(0.05
+  * infectionsByRequestedTime(data, severe));
 
-const casesForVentilatorsByRequestedTime = (data, severe) => 0.02
-  * infectionsByRequestedTime(data, severe);
+const casesForVentilatorsByRequestedTime = (data, severe) => Math.trunc(0.02
+  * infectionsByRequestedTime(data, severe));
 
 const dollarsInFlight = (data, severe) => infectionsByRequestedTime(data, severe)
   * data.region.avgDailyIncomePopulation * data.region.avgDailyIncomeInUSD * normalizeTime(data);
