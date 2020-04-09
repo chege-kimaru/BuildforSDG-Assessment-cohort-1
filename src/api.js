@@ -5,8 +5,8 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'mongoose-morgan';
 import mongodb from 'mongodb';
-import xml from 'xml';
 import path from 'path';
+import xml2js from 'xml2js';
 import estimator from './estimator';
 
 const mongooseUrl = process.env.MONGODB_URL;
@@ -20,12 +20,12 @@ MongoClient.connect(mongooseUrl, (err, data) => {
   db = data.db('test');
 });
 
+const jsonBuilder = new xml2js.Builder();
+
 const app = express();
 app.use(morgan({ connectionString: mongooseUrl }, {},
   (tokens, req, res) => `${Date.now()}\t\t${tokens.url(req, res)}\t\t`
     + `done in ${tokens['response-time'](req, res) / 1000} seconds`));
-// app.use(morgan((tokens, req, res) => `${Date.now()}\t\t${tokens.url(req, res)}\t\t`
-//   + `done in ${tokens['response-time'](req, res) / 1000} seconds`));
 app.use(compression());
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -47,7 +47,7 @@ router.post('/:format', (req, res, next) => {
     res.json(estimator(req.body));
   } else if (req.params.format === 'xml') {
     res.header('Content-Type', 'text/xml');
-    res.send(xml(estimator(req.body)));
+    res.send(jsonBuilder.buildObject(estimator(req.body)));
   } else {
     next();
   }
