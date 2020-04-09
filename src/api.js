@@ -24,8 +24,7 @@ const jsonBuilder = new xml2js.Builder();
 
 const app = express();
 app.use(morgan({ connectionString: mongooseUrl }, {},
-  (tokens, req, res) => `${Date.now()}\t\t${tokens.url(req, res)}\t\t`
-    + `done in ${tokens['response-time'](req, res) / 1000} seconds`));
+  ':method\t\t:url\t\t:status\t\t:response-time ms'));
 app.use(compression());
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
