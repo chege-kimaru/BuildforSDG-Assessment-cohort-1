@@ -20,7 +20,7 @@ MongoClient.connect(mongooseUrl, (err, data) => {
   db = data.db('test');
 });
 
-const jsonBuilder = new xml2js.Builder();
+const jsonBuilder = new xml2js.Builder({ headless: true });
 
 const app = express();
 app.use(morgan({ connectionString: mongooseUrl }, {},
