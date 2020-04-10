@@ -56,9 +56,8 @@ const casesForICUByRequestedTime = (data, severe) => Math.trunc(0.05
 const casesForVentilatorsByRequestedTime = (data, severe) => Math.trunc(0.02
   * infectionsByRequestedTime(data, severe));
 
-const dollarsInFlight = (data, severe) => Math.round(((infectionsByRequestedTime(data, severe)
-  * data.region.avgDailyIncomePopulation * data.region.avgDailyIncomeInUSD * normalizeTime(data))
-  + Number.EPSILON) * 100) / 100;
+const dollarsInFlight = (data, severe) => Math.trunc((infectionsByRequestedTime(data, severe)
+  * data.region.avgDailyIncomePopulation * data.region.avgDailyIncomeInUSD) / normalizeTime(data));
 
 
 const covid19ImpactEstimator = (data) => {
