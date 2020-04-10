@@ -45,7 +45,7 @@ router.post('/:format', (req, res, next) => {
   if (req.params.format === 'json') {
     res.json(estimator(req.body));
   } else if (req.params.format === 'xml') {
-    res.header('Content-Type', 'text/xml');
+    res.header('Content-Type', 'application/xml');
     res.send(jsonBuilder.buildObject(estimator(req.body)));
   } else {
     next();
