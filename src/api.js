@@ -72,7 +72,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res) => {
-  res.satus(500).json({ error: 'internal server error' });
+  res.satus(500).json({ error: 'Internal server error' });
 });
 
 app.listen(process.env.PORT || 3000);
