@@ -24,7 +24,7 @@ const jsonBuilder = new xml2js.Builder({ headless: true });
 
 const formart2Digits = (num) => {
   let n = Math.round(num);
-  if (n < 10) n = +`0${num}`;
+  if (n < 10) n = `0${n}`;
   return n;
 };
 
