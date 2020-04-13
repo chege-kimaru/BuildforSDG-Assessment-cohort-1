@@ -22,9 +22,14 @@ MongoClient.connect(mongooseUrl, (err, data) => {
 
 const jsonBuilder = new xml2js.Builder({ headless: true });
 
+const formart2Digits = (num) => {
+  let n = Math.round(num);
+  if (n < 10) n = +`0${num}`;
+  return n;
+};
+
 const app = express();
-app.use(morgan({ connectionString: mongooseUrl }, {},
-  ':method\t\t:url\t\t:status\t\t:response-time ms'));
+app.use(morgan({ connectionString: mongooseUrl }, {}, (tokens, req, res) => `${tokens.method(req, res)}\t\t${tokens.url(req, res)}\t\t${tokens.status(req, res)}\t\t ${formart2Digits(tokens['response-time'](req, res))}ms`));
 app.use(compression());
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
