@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Free covid-19 emulator">
+    <meta name="keywords" content="corona, covid-19, emulator, prediction, predictor">
+
+
+    <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="style.css">
+    </noscript>
+    <!-- Bootstrap CSS -->
+    <!--    <link media="print" onload="this.media='all'" rel="stylesheet"-->
+    <!--          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"-->
+    <!--          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"-->
+    <!--          crossorigin="anonymous">-->
+
+    <title>COVID-19 ESTIMATOR</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="text-center">COVID-19 ESTIMATOR</h1>
+        <form id="form">
+            <div class="form-group">
+                <label for="population">Population</label>
+                <input name="population" data-population type="number" class="form-control"
+                       id="population">
+            </div>
+            <div class="form-group">
+                <label for="timeToElapse">Time to elapse</label>
+                <input name="timeToElapse" data-time-to-elapse type="number" class="form-control"
+                       id="timeToElapse">
+            </div>
+            <div class="form-group">
+                <label for="reportedCases">Reported Cases</label>
+                <input name="reportedCases" data-reported-cases type="number"
+                       class="form-control"
+                       id="reportedCases">
+            </div>
+            <div class="form-group">
+                <label for="totalHospitalBeds">Total Hospital Beds</label>
+                <input name="totalHospitalBeds" data-total-hospital-beds type="number"
+                       class="form-control"
+                       id="totalHospitalBeds">
+            </div>
+            <div class="form-group">
+                <label for="periodType">Period Type</label>
+                <select name="periodType" data-period-type class="form-control" id="periodType">
+                    <option value="days">days</option>
+                    <option value="weeks">weeks</option>
+                    <option value="months">months</option>
+                </select>
+            </div>
+            <button data-go-estimate type="submit" class="btn btn-light">Submit</button>
+        </form>
+    </div>
+    <div class="text-center results">
+        <h2>Estimations</h2>
+        <h4>Impact</h4>
+        <div id="impact">
+
+        </div>
+        <h4>Severe Impact</h4>
+        <div id="severeImpact">
+
+        </div>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+
+  const resultTable = (data, severe) => {
+    return `
+            <table class="table">
+                <tr>
+                    <td>Currently Infected</td>
+                    <td>${severe ? data.severeImpact.currentlyInfected : data.impact.currentlyInfected}</td>
+                </tr>
+                <tr>
+                    <td>Infections</td>
+                    <td>${severe ? data.severeImpact.infectionsByRequestedTime : data.impact.infectionsByRequestedTime}</td>
+                </tr>
+                <tr>
+                    <td>Severe Cases</td>
+                    <td>${severe ? data.severeImpact.severeCasesByRequestedTime : data.impact.severeCasesByRequestedTime}</td>
+                </tr>
+                <tr>
+                    <td>Hospital Beds</td>
+                    <td>${severe ? data.severeImpact.hospitalBedsByRequestedTime : data.impact.hospitalBedsByRequestedTime}</td>
+                </tr>
+                <tr>
+                    <td>Cases for ICU</td>
+                    <td>${severe ? data.severeImpact.casesForICUByRequestedTime : data.impact.casesForICUByRequestedTime}</td>
+                </tr>
+                <tr>
+                    <td>Cases for Ventilators</td>
+                    <td>${severe ? data.severeImpact.casesForVentilatorsByRequestedTime : data.impact.casesForVentilatorsByRequestedTime}</td>
+                </tr>
+                <tr>
+                    <td>Dollars in Flight</td>
+                    <td>${severe ? data.severeImpact.dollarsInFlight : data.impact.dollarsInFlight}</td>
+                </tr>
+                </tr>
+            </table>
+      `;
+  };
+  const API = 'https://build-for-sdg-assessment.herokuapp.com/api/v1/on-covid-19';
+  axios.defaults.baseURL = API;
+
+  $('#form').submit(e => {
+    e.preventDefault();
+
+    // const data = new FormData($('#categoryForm')[0]);
+    const data = $('#form').serialize();
+    axios.post(`/`, data)
+      .then((response) => {
+        $('#impact').empty().append(resultTable(response.data, 0));
+        $('#severeImpact').empty().append(resultTable(response.data, 1));
+      })
+      .catch(function(error) {
+        alert(error);
+      });
+  });
+</script>
+</body>
+</html>
