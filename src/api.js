@@ -29,7 +29,7 @@ const formart2Digits = (num) => {
 };
 
 const app = express();
-app.use(morgan({ connectionString: mongooseUrl }, {}, (tokens, req, res) => `${tokens.method(req, res)}\t${tokens.url(req, res)}\t${tokens.status(req, res)}\t${formart2Digits(tokens['response-time'](req, res))}ms`));
+app.use(morgan({ connectionString: mongooseUrl }, {}, (tokens, req, res) => `${tokens.method(req, res)} ${tokens.url(req, res)} ${tokens.status(req, res)} ${formart2Digits(tokens['response-time'](req, res))}ms`));
 app.use(compression());
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -64,7 +64,7 @@ router.get('/logs', (req, res) => {
     if (error) throw error;
     let text = '';
     docs.forEach((doc) => {
-      text += `${doc.log}\r\n`;
+      text += `${doc.log}\n`;
     });
     res.header('Content-Type', 'text/plain');
     res.send(text);
